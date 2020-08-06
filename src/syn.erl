@@ -44,6 +44,10 @@
 -export([multi_call/2, multi_call/3, multi_call_reply/2]).
 -export([force_cluster_sync/1]).
 
+%%restore v1 api
+-export([find_by_key/1, find_by_key/2]).
+-export([find_by_pid/1, find_by_pid/2]).
+
 %% gen_server via interface
 -export([register_name/2, unregister_name/1, whereis_name/1, send/2]).
 
@@ -79,6 +83,19 @@ unregister_and_register(Name, Pid, Meta) ->
 -spec unregister(Name :: any()) -> ok | {error, Reason :: any()}.
 unregister(Name) ->
     syn_registry:unregister(Name).
+
+%v1 api
+-spec find_by_key(Name :: any()) -> pid() | undefined.
+find_by_key(Name)->syn_registry:whereis(Name).
+
+-spec find_by_pid(Name :: any()) -> pid() | undefined.              
+find_by_pid(Name)->syn_registry:whereis(Name).
+
+-spec find_by_key(Name :: any(), with_meta) -> {pid(), Meta :: any()} | undefined.
+find_by_key(Name,with_meta)->syn_registry:whereis(Name, with_meta).
+
+-spec find_by_pid(Name :: any(), with_meta) -> {pid(), Meta :: any()} | undefined.
+find_by_pid(Name,with_meta)->syn_registry:whereis(Name, with_meta).
 
 -spec whereis(Name :: any()) -> pid() | undefined.
 whereis(Name) ->
